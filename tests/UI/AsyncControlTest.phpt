@@ -9,49 +9,44 @@ use Nette\Application\UI\Presenter;
 use Tester\Assert;
 use Tester\TestCase;
 
-
 require_once __DIR__ . '/../../vendor/autoload.php';
-
 
 final class AsyncControlTest extends TestCase
 {
 
-	const VALID_SIGNAL = 'control-form-submit';
-	const FRAGMENT_PARAMETER = '_escaped_fragment_';
+	private const VALID_SIGNAL = 'control-form-submit';
+	private const FRAGMENT_PARAMETER = '_escaped_fragment_';
 
 
-	public function testHandleAjax()
+	public function testHandleAjax(): void
 	{
 		$presenter = Mockery::mock(Presenter::class);
 		$presenter->shouldReceive('isAjax')->once()->andReturn(TRUE);
 		$presenter->shouldReceive('getPayload')->andReturn($payload = new \stdClass);
 		$presenter->shouldReceive('sendPayload')->once();
-		/**
-		 * @var AsyncControl|Mockery\Mock $control
-		 */
+
+		/** @var AsyncControl|Mockery\Mock $control */
 		$control = Mockery::mock(AsyncControl::class)->makePartial();
 		$control->shouldReceive('getPresenter')->andReturn($presenter);
 		$renderedContent = 'rendered content';
 		$control->shouldReceive('renderAsync')->once()->andReturnUsing(function () use ($renderedContent) {
 			echo $renderedContent;
-		})
-		;
+		});
+
 		$control->shouldReceive('getSnippetId')->with('async')->andReturn($snippetId = 'snippet-control-async');
 		$control->handleAsyncLoad();
 
 		Assert::equal(['snippets' => [$snippetId => $renderedContent]], (array) $payload);
 	}
 
-
-	public function testHandleNoAjax()
+	public function testHandleNoAjax(): void
 	{
 		$presenter = Mockery::mock(Presenter::class);
 		$presenter->shouldReceive('isAjax')->once()->andReturn(FALSE);
 		$presenter->shouldNotReceive('getPayload');
 		$presenter->shouldNotReceive('sendPayload');
-		/**
-		 * @var AsyncControl|Mockery\Mock $control
-		 */
+
+		/** @var AsyncControl|Mockery\Mock $control */
 		$control = Mockery::mock(AsyncControl::class)->makePartial();
 		$control->shouldReceive('getPresenter')->andReturn($presenter);
 		$control->shouldNotReceive('renderAsync');
@@ -60,11 +55,9 @@ final class AsyncControlTest extends TestCase
 	}
 
 
-	public function testRenderAsyncLoadLink()
+	public function testRenderAsyncLoadLink(): void
 	{
-		/**
-		 * @var AsyncControl|Mockery\Mock $control
-		 */
+		/** @var AsyncControl|Mockery\Mock $control */
 		$control = Mockery::mock(AsyncControl::class)->makePartial();
 
 		$template = Mockery::mock(ITemplate::class);
@@ -85,14 +78,13 @@ final class AsyncControlTest extends TestCase
 	}
 
 
-	public function testRenderWithSignal()
+	public function testRenderWithSignal(): void
 	{
 		$presenter = Mockery::mock(Presenter::class);
 		$presenter->shouldReceive('getParameter')->once()->with(self::FRAGMENT_PARAMETER)->andReturn(NULL);
 		$presenter->shouldReceive('getParameter')->once()->with(Presenter::SIGNAL_KEY)->andReturn(self::VALID_SIGNAL);
-		/**
-		 * @var AsyncControl|Mockery\Mock $control
-		 */
+
+		/** @var AsyncControl|Mockery\Mock $control */
 		$control = Mockery::mock(AsyncControl::class)->makePartial();
 		$control->shouldReceive('getPresenter')->andReturn($presenter);
 		$control->shouldReceive('getUniqueId')->once()->andReturn('control');
@@ -101,13 +93,12 @@ final class AsyncControlTest extends TestCase
 	}
 
 
-	public function testRenderWithFragment()
+	public function testRenderWithFragment(): void
 	{
 		$presenter = Mockery::mock(Presenter::class);
 		$presenter->shouldReceive('getParameter')->once()->with(self::FRAGMENT_PARAMETER)->andReturn('');
-		/**
-		 * @var AsyncControl|Mockery\Mock $control
-		 */
+
+		/** @var AsyncControl|Mockery\Mock $control */
 		$control = Mockery::mock(AsyncControl::class)->makePartial();
 		$control->shouldReceive('getPresenter')->andReturn($presenter);
 		$control->shouldReceive('render')->once();
@@ -115,14 +106,13 @@ final class AsyncControlTest extends TestCase
 	}
 
 
-	public function testRenderAsyncRenderer()
+	public function testRenderAsyncRenderer(): void
 	{
 		$presenter = Mockery::mock(Presenter::class);
 		$presenter->shouldReceive('getParameter')->once()->with(self::FRAGMENT_PARAMETER)->andReturn(NULL);
 		$presenter->shouldReceive('getParameter')->once()->with(Presenter::SIGNAL_KEY)->andReturn(self::VALID_SIGNAL);
-		/**
-		 * @var AsyncControl|Mockery\Mock $control
-		 */
+
+		/** @var AsyncControl|Mockery\Mock $control */
 		$control = Mockery::mock(AsyncControl::class)->makePartial();
 		$control->shouldReceive('getPresenter')->andReturn($presenter);
 		$control->shouldReceive('getUniqueId')->once()->andReturn('control');
@@ -130,17 +120,18 @@ final class AsyncControlTest extends TestCase
 		$control->setAsyncRenderer(function () use (&$asyncRendered) {
 			$asyncRendered = TRUE;
 		});
+
 		$control->renderAsync();
 		Assert::equal(TRUE, $asyncRendered);
 	}
 
 
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 		Mockery::close();
 	}
-}
 
+}
 
 (new AsyncControlTest)->run();

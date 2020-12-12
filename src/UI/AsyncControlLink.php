@@ -5,42 +5,45 @@ namespace Pd\AsyncControl\UI;
 final class AsyncControlLink
 {
 
-	private static $defaultMessage = 'Load content';
-	private static $defaultAttributes = [];
-	/**
-	 * @var string
-	 */
-	private $message;
-	/**
-	 * @var array
-	 */
-	private $attributes;
+	private static string $defaultMessage = 'Load content';
+	private static array $defaultAttributes = [];
 
+	private string $message;
 
+	/** @var mixed[] */
+	private array $attributes;
+
+	/**
+	 * @param string|null $message
+	 * @param mixed[]|null $attributes
+	 */
 	public function __construct(
-		string $message = NULL,
-		array $attributes = NULL
+		?string $message = null,
+		?array $attributes = null
 	) {
-		$this->message = $message === NULL ? self::$defaultMessage : $message;
-		$this->attributes = $attributes === NULL ? self::$defaultAttributes : $attributes;
+		$this->message = $message ?? self::$defaultMessage;
+		$this->attributes = $attributes ?? self::$defaultAttributes;
 	}
 
-
-	public static function setDefault(string $message, array $attributes = [])
+	/**
+	 * @param string $message
+	 * @param mixed[] $attributes
+	 */
+	public static function setDefault(string $message, array $attributes = []): void
 	{
 		self::$defaultMessage = $message;
 		self::$defaultAttributes = $attributes;
 	}
-
 
 	public function getMessage(): string
 	{
 		return $this->message;
 	}
 
-
+	/** @return mixed[] */
 	public function getAttributes(): array
 	{
 		return $this->attributes;
 	}
+
 }
