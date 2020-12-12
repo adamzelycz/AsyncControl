@@ -21,7 +21,7 @@ trait AsyncControlTrait
 
 	public function handleAsyncLoad()
 	{
-		if ( ! $this instanceof Control || ! ($presenter = $this->getPresenter(FALSE)) || ! $presenter->isAjax()) {
+		if ( ! $this instanceof Control || ! ($presenter = $this->getPresenterIfExists()) || ! $presenter->isAjax()) {
 			return;
 		}
 		ob_start(function () {
