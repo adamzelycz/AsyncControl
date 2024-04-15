@@ -6,29 +6,31 @@ final class AsyncControlLink
 {
 
 	private static string $defaultMessage = 'Load content';
+
+	/** @var array<string, string> */
 	private static array $defaultAttributes = [];
 
 	private string $message;
 
-	/** @var mixed[] */
+	/**
+	 * @var array<string, string>
+	 */
 	private array $attributes;
 
 	/**
 	 * @param string|null $message
-	 * @param mixed[]|null $attributes
+	 * @param array<string, string> $attributes
 	 */
 	public function __construct(
 		?string $message = null,
 		?array $attributes = null
-	) {
+	)
+	{
 		$this->message = $message ?? self::$defaultMessage;
 		$this->attributes = $attributes ?? self::$defaultAttributes;
 	}
 
-	/**
-	 * @param string $message
-	 * @param mixed[] $attributes
-	 */
+	/** @param array<string, string>  $attributes */
 	public static function setDefault(string $message, array $attributes = []): void
 	{
 		self::$defaultMessage = $message;
@@ -40,7 +42,7 @@ final class AsyncControlLink
 		return $this->message;
 	}
 
-	/** @return mixed[] */
+	/** @return array<string, string> */
 	public function getAttributes(): array
 	{
 		return $this->attributes;

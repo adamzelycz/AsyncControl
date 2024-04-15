@@ -7,6 +7,7 @@ use Tester\TestCase;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+/** @testCase */
 final class AsyncControlLinkTest extends TestCase
 {
 
